@@ -1,5 +1,7 @@
 # Maven build container 
 
+
+
 FROM maven:3.5.2-jdk-8-alpine AS maven_build
 
 COPY pom.xml /tmp/
