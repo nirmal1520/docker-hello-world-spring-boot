@@ -41,11 +41,11 @@ node {
       echo "Docker Image Tag Name: ${dockerImageTag}"
       
       withCredentials([usernamePassword(credentialsId: 'ecr', passwordVariable: 'pass', usernameVariable: 'user')]) {
+       
+      docker.withRegistry("868362883581.dkr.ecr.us-east-2.amazonaws.com", "ecr") {
+      docker.image("${dockerImageTag}").push()
+             }
 
-
-      sh "docker login -u ${user} -p ${pass} ${dockerRepoUrl}"
-      sh "docker tag ${dockerImageName} ${dockerImageTag}"
-      sh "docker push ${dockerImageTag}"
     }
     }
 }
