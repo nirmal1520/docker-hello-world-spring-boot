@@ -43,7 +43,11 @@ node {
       //withCredentials([usernamePassword(credentialsId: 'ecr', passwordVariable: 'pass', usernameVariable: 'user')]) {
        
       docker.withRegistry("https://807410046616.dkr.ecr.us-east-1.amazonaws.com", "ecr:us-east-1:aws") {
-      docker.image("${dockerImageTag}").push()
+	      
+      def customImage = docker.build("hello-world-java:${env.BUILD_ID}")
+                  customImage.push()
+
+     // docker.image("${dockerImageTag}").push()
              }
 
     //}
