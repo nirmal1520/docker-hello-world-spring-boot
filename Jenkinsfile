@@ -42,7 +42,7 @@ node {
       
       withCredentials([usernamePassword(credentialsId: 'ecr', passwordVariable: 'pass', usernameVariable: 'user')]) {
        
-      docker.withRegistry("868362883581.dkr.ecr.us-east-2.amazonaws.com", "ecr") {
+      docker.withRegistry("https://868362883581.dkr.ecr.us-east-2.amazonaws.com", "ecr") {
       docker.image("${dockerImageTag}").push()
              }
 
