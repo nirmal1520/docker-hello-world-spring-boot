@@ -7,7 +7,7 @@ node {
     def dockerImage
     // ip address of the docker private repository(nexus)
     
-    def dockerRepoUrl = "868362883581.dkr.ecr.us-east-2.amazonaws.com"
+    def dockerRepoUrl = "807410046616.dkr.ecr.us-east-1.amazonaws.com"
     def dockerImageName = "hello-world-java"
     def dockerImageTag = "${dockerRepoUrl}/${dockerImageName}:${env.BUILD_NUMBER}"
     
@@ -42,7 +42,7 @@ node {
       
       //withCredentials([usernamePassword(credentialsId: 'ecr', passwordVariable: 'pass', usernameVariable: 'user')]) {
        
-      docker.withRegistry("https://868362883581.dkr.ecr.us-east-2.amazonaws.com", "ecr:us-east-1:aws") {
+      docker.withRegistry("https://807410046616.dkr.ecr.us-east-1.amazonaws.com", "ecr:us-east-1:aws") {
       docker.image("${dockerImageTag}").push()
              }
 
