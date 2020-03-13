@@ -1,13 +1,13 @@
 node {
     // reference to maven
     // ** NOTE: This 'maven-3.6.1' Maven tool must be configured in the Jenkins Global Configuration.   
-    def mvnHome = tool 'maven-3.6.1'
+    def mvnHome = tool 'maven'
 
     // holds reference to docker image
     def dockerImage
     // ip address of the docker private repository(nexus)
     
-    def dockerRepoUrl = "localhost:8083"
+    def dockerRepoUrl = "868362883581.dkr.ecr.us-east-2.amazonaws.com"
     def dockerImageName = "hello-world-java"
     def dockerImageTag = "${dockerRepoUrl}/${dockerImageName}:${env.BUILD_NUMBER}"
     
@@ -17,7 +17,7 @@ node {
       // Get the Maven tool.
       // ** NOTE: This 'maven-3.6.1' Maven tool must be configured
       // **       in the global configuration.           
-      mvnHome = tool 'maven-3.6.1'
+      mvnHome = tool 'maven'
     }    
   
     stage('Build Project') {
@@ -25,18 +25,6 @@ node {
       sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
     }
 	
-	stage('Publish Tests Results'){
-      parallel(
-        publishJunitTestsResultsToJenkins: {
-          echo "Publish junit Tests Results"
-		  junit '**/target/surefire-reports/TEST-*.xml'
-		  archive 'target/*.jar'
-        },
-        publishJunitTestsResultsToSonar: {
-          echo "This is branch b"
-      })
-    }
-		
     stage('Build Docker Image') {
       // build docker image
       sh "whoami"
@@ -51,8 +39,11 @@ node {
       // deploy docker image to nexus
 
       echo "Docker Image Tag Name: ${dockerImageTag}"
+      
+      withCredentials([usernamePassword(credentialsId: 'ecr', passwordVariable: 'pass', usernameVariable: 'user')]) {
 
-      sh "docker login -u admin -p admin123 ${dockerRepoUrl}"
+
+      sh "docker login -u ${user} -p ${pass} ${dockerRepoUrl}"
       sh "docker tag ${dockerImageName} ${dockerImageTag}"
       sh "docker push ${dockerImageTag}"
     }
