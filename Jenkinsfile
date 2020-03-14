@@ -3,6 +3,8 @@ node {
     // ** NOTE: This 'maven-3.6.1' Maven tool must be configured in the Jenkins Global Configuration.   
     def mvnHome = tool 'maven'
 
+	
+	
     // holds reference to docker image
     def dockerImage
     // ip address of the docker private repository(nexus)
