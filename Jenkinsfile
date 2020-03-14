@@ -1,13 +1,13 @@
 node {
     // reference to maven
     // ** NOTE: This 'maven-3.6.1' Maven tool must be configured in the Jenkins Global Configuration.   
-    def mvnHome = tool 'maven-3.6.1'
+    def mvnHome = tool 'maven'
 
     // holds reference to docker image
     def dockerImage
     // ip address of the docker private repository(nexus)
     
-    def dockerRepoUrl = "localhost:8083"
+    def dockerRepoUrl = "807410046616.dkr.ecr.us-east-1.amazonaws.com"
     def dockerImageName = "hello-world-java"
     def dockerImageTag = "${dockerRepoUrl}/${dockerImageName}:${env.BUILD_NUMBER}"
     
@@ -17,7 +17,7 @@ node {
       // Get the Maven tool.
       // ** NOTE: This 'maven-3.6.1' Maven tool must be configured
       // **       in the global configuration.           
-      mvnHome = tool 'maven-3.6.1'
+      mvnHome = tool 'maven'
     }    
   
     stage('Build Project') {
