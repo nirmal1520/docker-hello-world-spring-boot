@@ -25,18 +25,6 @@ node {
       sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
     }
 	
-	stage('Publish Tests Results'){
-      parallel(
-        publishJunitTestsResultsToJenkins: {
-          echo "Publish junit Tests Results"
-		  junit '**/target/surefire-reports/TEST-*.xml'
-		  archive 'target/*.jar'
-        },
-        publishJunitTestsResultsToSonar: {
-          echo "This is branch b"
-      })
-    }
-		
     stage('Build Docker Image') {
       // build docker image
       sh "whoami"
@@ -51,9 +39,17 @@ node {
       // deploy docker image to nexus
 
       echo "Docker Image Tag Name: ${dockerImageTag}"
+      
+      //withCredentials([usernamePassword(credentialsId: 'ecr', passwordVariable: 'pass', usernameVariable: 'user')]) {
+       
+      docker.withRegistry("https://807410046616.dkr.ecr.us-east-1.amazonaws.com", "ecr:us-east-1:aws") {
+	      
+      def customImage = docker.build("hello-world-java:${env.BUILD_ID}")
+                  customImage.push()
 
-      sh "docker login -u admin -p admin123 ${dockerRepoUrl}"
-      sh "docker tag ${dockerImageName} ${dockerImageTag}"
-      sh "docker push ${dockerImageTag}"
+     // docker.image("${dockerImageTag}").push()
+             }
+
+    //}
     }
 }
